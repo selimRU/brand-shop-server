@@ -29,7 +29,23 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         await client.connect();
+        const productCollections = client.db("brandShop").collection("products");
 
+        app.get('/products', async (req, res) => {
+            const query = {};
+            const result = await productCollections.find(query).toArray()
+            res.send(result)
+        })
+        app.get('/products/:name', async (req, res) => {
+            const query = { name: req.params.name }
+            const result = await productCollections.find(query).toArray()
+            res.send(result)
+        })
+        app.post('/products', async (req, res) => {
+            const product = req.body
+            const result = await productCollections.insertOne(product)
+            res.send(result)
+        })
 
     } finally {
         // Ensures that the client will close when you finish/error
