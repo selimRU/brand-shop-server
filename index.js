@@ -44,7 +44,7 @@ async function run() {
             res.send(result)
         })
         app.get('/cart', async (req, res) => {
-            const query = {};
+            const query = req.body;
             const result = await cartCollections.find(query).toArray()
             res.send(result)
         })
@@ -54,9 +54,34 @@ async function run() {
             const result = await productCollections.insertOne(product)
             res.send(result)
         })
-        app.post('/cart', async (req, res) => {
+        app.put('/products/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
             const product = req.body
+            const updateProduct = {
+                $set: {
+                    name: product.name,
+                    type: product.type,
+                    price: product.price,
+                    ratting: product.ratting,
+                    description: product.description,
+                    image: product.image
+                }
+            }
+            const result = await productCollections.updateOne(filter, updateProduct, options);
+            res.send(result)
+        })
+        app.post('/cart', async (req, res) => {
+            const product = {}
+            console.log(product);
             const result = await cartCollections.insertOne(product)
+            res.send(result)
+        })
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await productCollections.deleteOne(query)
             res.send(result)
         })
 
