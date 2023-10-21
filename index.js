@@ -14,9 +14,6 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-// bRFUQ0DfdQ36K0rh
-// brandShop
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.nc6s3b6.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
     serverApi: {
@@ -74,7 +71,6 @@ async function run() {
         })
         app.post('/cart', async (req, res) => {
             const product = req.body
-            // console.log(product);
             const result = await cartCollections.insertOne(product)
             res.send(result)
         })
